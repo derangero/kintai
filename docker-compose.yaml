@@ -1,0 +1,17 @@
+version: '3.1'
+
+services:
+  db:
+    image: postgres:14
+    restart: always
+    container_name: testdb
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: testpassword
+      POSTGRES_DB: mugidb
+      PGDATA: /var/lib/postgresql/data/pgdata
+    ports:
+      - 5432:5432
+    volumes:
+      - ./data/postgres/pgdata:/var/lib/postgresql/data/pgdata
+      - ./data/postgres/log:/var/log

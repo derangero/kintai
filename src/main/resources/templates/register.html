@@ -1,0 +1,39 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+</head>
+<body>
+    <form method="POST" action="#" th:action="@{/register}" th:object="${registerForm}">
+        <div>
+            <p>名前</p>
+            <p><input type="text" name="name" th:value="*{name}" /></p>
+            <p th:if="${#fields.hasErrors('name')}" th:errors="*{name}">
+                名前に関するエラー
+            </p>
+        </div>
+        <div>
+            <p>パスワード</p>
+            <p><input type="password" name="password" th:value="*{password}" /></p>
+            <p th:if="${#fields.hasErrors('password')}" th:errors="*{password}">
+                パスワードに関するエラー
+            </p>
+        </div>
+        <div>
+	        <p>権限</p>
+	        <select name="roleCode" >
+	            <option
+	                th:each="roles : ${roleList}"
+	                th:value="${roles.code}"
+	                th:text="${roles.name}"
+	                th:selected="${roles.code == selectedValue}">
+	            </option>
+	        </select>
+	    </div>
+	    <div>　</div>
+        <div>
+            <button type="submit">登録</button>
+        </div>
+    </form>
+</body>
+</html>
