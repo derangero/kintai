@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:fragment="commonHeader(name, useCss, useScript)">
+	<meta charset="UTF-8">
+	<title th:text="#{title.base} + #{title. + ${name}}"></title>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+	
+	<link th:href="@{../css/common.css}" rel="stylesheet" type="text/css">
+	<link th:href="@{../css/header.css}" rel="stylesheet" type="text/css">
+	<script type="text/javascript" th:src="@{../js/common.js}"></script>
+  
+	<th:block th:if=${useCss}>
+  		<link th:href="@{'../css/' + ${name} + '.css'}" rel="stylesheet" type="text/css">
+	</th:block>
+	<th:block th:if=${useScript}>
+		<script type="text/javascript" th:src="@{'../js/' +  ${name} + '.js'}"></script>
+	</th:block>
+</head>
+</html>

@@ -13,8 +13,10 @@ public class UserDetailsImpl implements UserDetails {
     
 	private String username;
     private String password;
-    private Collection<GrantedAuthority> authorities;
-    private String employeeName;
+
+	private Collection<GrantedAuthority> authorities;
+    
+	private String employeeName;
 
     public UserDetailsImpl(String username, String password, Collection<GrantedAuthority> authorities,
     		String employeeName) {

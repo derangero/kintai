@@ -1,0 +1,66 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="/fragment/commonHeader::commonHeader(name = 'attendanceRecordList', useCss = false, useScript = true)" />
+<script th:inline="javascript">
+		const error = /*[[${error}]]*/"error";
+        console.log(error);
+</script>
+<body>
+	<section class="attendanceRecordListHeader">
+		<th:block th:replace="/fragment/header::header(title.attendanceRecordList, ${employeeName})" />
+	</section>
+
+	<section id="attendanceRecordList-condition">
+		<!-- 一段目 -->
+		<div class="conditionRow">
+			<!-- コンテンツ(横並び) -->
+			<div class="conditionCol">
+				<span th:text="#{common.fiscalYear}"></span
+				>:　<input type="text" inputmode="numeric" required 
+						pattern="^[0-9]+$" maxlength="4"
+						id="attendanceRecordList-fiscalYear"class="fiscalYearInput"/>
+			</div>
+			<div class="conditionCol">
+				<span th:text="#{common.month}"></span>:
+				<select id="attendanceRecordList-monthSelection">
+				</select>
+			</div>
+		</div>
+	</section>
+	
+	<section id="attendanceRecordList-headerButtons">
+		<button type="submit" id="attendanceRecordList-search" th:text="#{common.search}"></button>
+	</section>
+	
+	<section class="attendanceRecordListContent">
+	    <table class="table table-striped">
+	    <thead>
+	        <tr>
+	          <th>日付</th>
+	          <th>出勤</th>
+	          <th>退勤</th>
+	          <th>勤務時間</th>
+	          <th>承認</th>
+	          <th></th>
+	        </tr>
+	      </thead>
+	      <tbody>
+	        <tr th:each="record : ${recordDtos}" class="align-middle">
+	          <td th:text="${#temporals.format(record.recordDate, 'M月d日')}"></td>
+	          <td th:text="${#temporals.format(record.recordDateTimeByStart, 'HH:mm')}"></td>
+	          <td th:text="${#temporals.format(record.recordDateTimeByEnd, 'HH:mm')}"></td>
+	          <td th:text="${record.displayWorkingHours}"></td>
+	          <td th:text="${record.displayStampApproval}"></td>
+	        </tr>
+	      </tbody>
+	    </table>
+	</section>
+    
+    <section class="attendanceRecordListFooter">
+	    <div>
+		    <button type="button" onclick="history.back()">戻る</button>
+	    </div>
+	</section>
+</body>
+<meta name="_csrf" th:content="${_csrf.token}"/>
+</html>

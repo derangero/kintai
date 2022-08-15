@@ -1,0 +1,29 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="/fragment/commonHeader::commonHeader(name = 'login', useCss = true, useScript = true)">
+</head>
+<body>
+    <form method="POST" action="#" th:action="@{/public/login}" id="loginForm" class="loginForm">
+        <div>
+            <p th:text="#{common.code_1( #{common.employee} )}" />
+            <p><input type="text" name="employeeCode" th:value="*{employeeCode}" /></p>
+        </div>
+        <div>
+             <p th:text="#{common.password}" />
+            <p><input type="password" name="password" /></p>
+        </div>
+        <div class="errorMsg">
+	        <th:block th:if="${param.error}">
+	    		<th:block th:if="${session[SPRING_SECURITY_LAST_EXCEPTION] != null}">
+	        		<span th:text="${session[SPRING_SECURITY_LAST_EXCEPTION].message}"></span>
+	    		</th:block>
+    		</th:block>
+		</div>
+        <div>
+            <button type="submit" th:text="#{login.login}" id="login-loginButton"></button>
+        </div>
+    </form>
+    <!-- <div th:insert="~{fragment/footer :: #copy-section}"></div> -->
+</body>
+</html>

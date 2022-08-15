@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.dao.master.MEmployeeDao;
+import com.example.demo.dao.transaction.TAttendanceRecordDao;
 import com.example.demo.entity.master.MEmployee;
 import com.example.demo.entity.transaction.TAttendanceRecord;
 import com.example.demo.service.RecordService;
@@ -17,16 +18,15 @@ public class RecordServiceImple implements RecordService {
 
 	@Autowired
 	MEmployeeDao employeeDao;
-	//@Autowired
-	//TAttendanceRecordRepository attendanceRecordRepo;
+	@Autowired
+	TAttendanceRecordDao attendanceRecordDao;
 
 	@Override
 	public String recordByStart(String employeeCode, LocalDateTime recordTime) {
 		MEmployee employee = employeeDao.findByCode(employeeCode)
 				.orElseThrow(() -> new UsernameNotFoundException("user not found"));
-//		TAttendanceRecord attendanceRecord = attendanceRecordRepo.findByEmployeeAndStartRecord(employee.getId(),
-//				recordTime.toLocalDate());
-		TAttendanceRecord attendanceRecord = null;
+		TAttendanceRecord attendanceRecord = attendanceRecordDao.findByEmployeeAndStartRecord(employee.getId(),
+				recordTime.toLocalDate());
 		String errorMsg = validateByStart(attendanceRecord);
 		if (errorMsg == null) {
 			record(employee, recordTime, true);
@@ -48,9 +48,8 @@ public class RecordServiceImple implements RecordService {
 	public String recordByEnd(String employeeCode, LocalDateTime recordTime) {
 		MEmployee employee = employeeDao.findByCode(employeeCode)
 				.orElseThrow(() -> new UsernameNotFoundException("user not found"));
-//		TAttendanceRecord attendanceRecord = attendanceRecordRepo.findByEmployeeAndStartRecord(employee.getId(),
-//				recordTime.toLocalDate());
-		TAttendanceRecord attendanceRecord = null;
+		TAttendanceRecord attendanceRecord = attendanceRecordDao.findByEmployeeAndStartRecord(employee.getId(),
+				recordTime.toLocalDate());
 		String errorMsg = validateByEnd(attendanceRecord);
 		if (errorMsg == null) {
 			record(employee, recordTime, false);
@@ -83,7 +82,8 @@ public class RecordServiceImple implements RecordService {
 		}
 		if (attendanceRecord != null) {
 			attendanceRecord.setEmployee(employee);
-			//attendanceRecordRepo.save(attendanceRecord);
+			//テストのためコメントアウト
+			//attendanceRecordDao.save(attendanceRecord);
 		}
 		
 		return true; // 今は戻り値を使わない

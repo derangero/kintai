@@ -20,10 +20,10 @@ import com.example.demo.dto.RecordDto;
 import com.example.demo.entity.master.MEmployee;
 import com.example.demo.entity.master.MFiscalCalendar;
 import com.example.demo.entity.transaction.TAttendanceRecord;
-import com.example.demo.service.RecordListService;
+import com.example.demo.service.AttendanceRecordListService;
 
 @Service
-public class RecordListServiceImple implements RecordListService {
+public class AttendanceRecordListServiceImple implements AttendanceRecordListService {
 
 	@Autowired
 	MFiscalCalendarDao fiscalCalendarDao;

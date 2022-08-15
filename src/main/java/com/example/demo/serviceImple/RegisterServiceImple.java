@@ -10,9 +10,9 @@ import org.springframework.ui.Model;
 import com.example.demo.common.util.Util;
 import com.example.demo.dao.master.MEmployeeDao;
 import com.example.demo.dao.master.MRoleDao;
+import com.example.demo.dto.RegisterDto;
 import com.example.demo.entity.master.MEmployee;
 import com.example.demo.entity.master.MRole;
-import com.example.demo.form.RegisterForm;
 import com.example.demo.service.RegisterService;
 
 @Service
@@ -42,7 +42,7 @@ public class RegisterServiceImple implements RegisterService {
 
 	@Override
 	public void setModelByRegistering(Model model) {
-        model.addAttribute("registerForm", new RegisterForm());
+        model.addAttribute("registerForm", new RegisterDto());
         List<MRole> roles = roleDao.listAllOrderByCode();
         model.addAttribute("roleList", roles);
         model.addAttribute("selectedValue", "1");

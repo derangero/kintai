@@ -32,16 +32,15 @@ public class DemoSecurityConfigurerAdapter {
     	http.formLogin(login -> login
     	        .usernameParameter("employeeCode")
     	        .passwordParameter("password")
-    	        .loginPage("/login")
-    	        .loginProcessingUrl("/login")
-    	        .failureUrl("/login?error=1")
+    	        .loginPage("/public/login")
+    	        .loginProcessingUrl("/public/login")
+    	        .failureUrl("/public/login?error=1")
     	        .defaultSuccessUrl("/", true)
         ).authorizeHttpRequests(authz -> authz
-    			//register は直リンクしない
-                //管理者ユーザー向けのアクセスパスは、管理者権限をもつユーザーのみアクセス可能にする
-        		.mvcMatchers("/css/**", "/js/**", "/login").permitAll()
-                .anyRequest().authenticated()
-        );
+        		.mvcMatchers("/css/**", "/js/**", "/public/**", "/fragment/**").permitAll()
+        		.anyRequest().authenticated()
+        ).exceptionHandling()
+    		.accessDeniedPage("/error/error");
 //    	.logout(logout -> logout
 //                 .logoutSuccessUrl("/login")
 //                 .permitAll()

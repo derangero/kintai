@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+  xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="/fragment/commonHeader::commonHeader(name = 'portal', useCss = false, useScript = true)">
+</head>
+<body>
+    <div>
+		<div th:replace="/fragment/header::conditionDiv(common.employeeCode, ${employeeCode})">
+		</div>
+    </div>
+    <div>
+    	<div th:replace="/fragment/header::conditionDiv(common.employeeName, ${employeeName})">
+		</div>
+	</div>
+    <div>
+	    <span id="portal-time"></span>
+    </div>
+    <div>
+    	<span id="portal-errorMsg"></span>
+    </div>
+	<form method="POST" action="#" th:action="@{/goToWork}" id="portal-goToWorkForm">
+	    <div>
+			<button type="submit" id="portal-goToWorkButton" th:text="#{portal.goToWork}"></button>
+			<span id="portal-goToWorkText" th:text="#{portal.goToWork}"></span>
+	    </div>
+    </form>
+   	<form method="POST" action="#" th:action="@{/leaveWork}" id="portal-leaveWorkForm">
+		<div>
+			<button type="submit" id="portal-leaveWorkButton" th:text="#{portal.leaveWork}"></button>
+			<span id="portal-leaveWorkText" th:text="#{portal.leaveWork}"></span>
+	    </div>
+	</form>
+    <div>
+    　</div>
+    <div>
+    　</div>
+    <div>
+    　</div>
+    <div sec:authorize="hasAuthority('ADMIN')">
+        管理者のみ見えるdivブロックです。
+    </div>
+    <div sec:authorize="hasAuthority('USER')">
+        ユーザーのみ見えるdivブロックです。
+    </div>
+    <div>
+        <a href="/attendanceRecordList">勤怠表</a>
+    </div>
+</body>
+<th:block th:insert="/fragment/footer::csrfMeta()" />
+</html>

@@ -1,20 +1,21 @@
-package com.example.demo.form;
+package com.example.demo.dto;
+
+import java.io.Serializable;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-public class RegisterForm {
+public class RegisterDto implements Serializable {
+	private static final long serialVersionUID = 1L;
 
-    @NotBlank
+	@NotBlank
     private String name;
-
     @NotBlank
     private String password;
-
     @NotNull
     private Integer roleCode;
 
-    public RegisterForm() {
+    public RegisterDto() {
     }
 
 	public String getName() {

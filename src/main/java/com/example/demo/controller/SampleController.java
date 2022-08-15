@@ -1,102 +1,89 @@
 package com.example.demo.controller;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.example.demo.common.util.JsonUtil;
 import com.example.demo.common.util.Util;
-import com.example.demo.form.RegisterForm;
+import com.example.demo.dto.PortalDto;
+import com.example.demo.dto.RegisterDto;
+import com.example.demo.dto.header.AttendanceRecordListHeaderDto;
+import com.example.demo.service.AttendanceRecordListService;
 import com.example.demo.service.ModelService;
-import com.example.demo.service.RecordListService;
 import com.example.demo.service.RecordService;
 import com.example.demo.service.RegisterService;
 import com.example.demo.serviceImple.UserDetailsImpl;
 
 @Controller
 @RequestMapping("/")
+@Validated
 public class SampleController {
-
+    
+    @Autowired
+    MessageSource messageSource;
     @Autowired
     private RegisterService registerService;
     @Autowired
     private RecordService recordService;
     @Autowired
-    private RecordListService recordListService;
+    private AttendanceRecordListService attendanceRecordListService;
     @Autowired
     private ModelService modelService;
 
 	@GetMapping
-    public String index (@AuthenticationPrincipal UserDetailsImpl userDetails, Model model) {
+    public String index(@AuthenticationPrincipal UserDetailsImpl userDetails, Model model) {
     	modelService.setModelFromIndex(model, userDetails, Util.getNowLocalDate());
-    	return "top";
+    	return "portal";
     }
 
-    private void setAccountBaseData(Model model, UserDetailsImpl userDetails) {
-    	model.addAttribute("employeeCode", userDetails.getUsername());
-    	model.addAttribute("employeeName", userDetails.getEmployeeName());
-	}
-
-	@GetMapping("/login")
+	@GetMapping("/public/login")
     public String login() {
-    	return "login";
+    	return "/public/login";
     }
 
-    @GetMapping("/top")
-    public String top() {
-        return "top";
+    @GetMapping("/portal")
+    public String portal() {
+        return "portal";
     }
 
     @PostMapping("/goToWork")
+    @ResponseBody
     public String goToWork(@AuthenticationPrincipal UserDetailsImpl userDetails, Model model) {
     	LocalDateTime nowTime = Util.getNowLocalDateTime();
 
     	//Stringって参照渡しできたっけ？
     	String errorMsg = recordService.recordByStart(userDetails.getUsername(), nowTime);
 
-    	setAccountBaseData(model, userDetails);
-    	model.addAttribute("errorMsg", errorMsg);
-    	if (errorMsg == null) {
-    		model.addAttribute("isRecordedByStart", true);
-    		model.addAttribute("recordedTime", Util.formatHHmmss(nowTime));
-    	}
-    	model.addAttribute("isRecordedByEnd", false);
-
-    	//modelからのデータがビューに反映されない
-    	//return "redirect:/top";
-    	return "/top";
+    	//return "redirect:/main";
+    	PortalDto dto = PortalDto.fromByGoToWork(nowTime, errorMsg);
+    	return JsonUtil.getJson(dto);
     }
 
     @PostMapping("/leaveWork")
+    @ResponseBody
     public String leaveWork(@AuthenticationPrincipal UserDetailsImpl userDetails, Model model) {
     	LocalDateTime nowTime = Util.getNowLocalDateTime();
     	
-    	//Stringって参照渡しできたっけ？
     	String errorMsg = recordService.recordByEnd(userDetails.getUsername(), nowTime);
-    	
-    	setAccountBaseData(model, userDetails);
-    	model.addAttribute("recordTime", nowTime.toString());
-    	model.addAttribute("errorMsg", errorMsg);
-    	model.addAttribute("isRecordedByStart", errorMsg == null);
-    	model.addAttribute("isRecordedByEnd", errorMsg == null);
-    	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
-    	model.addAttribute("recordedTime", nowTime.format(formatter));
-    	
-    	//modelからのデータがビューに反映されない
-    	//return "redirect:/top";
-    	return "/top";
+
+    	PortalDto dto = PortalDto.fromByLeaveWork(nowTime, errorMsg);
+    	return JsonUtil.getJson(dto);
     }
 
     // 登録画面
@@ -111,7 +98,7 @@ public class SampleController {
     // 登録画面の POST 受け付け
     @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("/register")
-    public String postRegister(@ModelAttribute @Valid RegisterForm registerForm, BindingResult bindingResult) {
+    public String postRegister(@ModelAttribute @Valid RegisterDto registerForm, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             // エラーがある場合は、エラーメッセージを表示したいので
             // View をレンダリングする。
@@ -124,13 +111,26 @@ public class SampleController {
         return "redirect:/register";
     }
 
-    @GetMapping("/attendanceRecord")
-    public String attendanceRecord(@AuthenticationPrincipal UserDetailsImpl userDetails, Model model) throws Exception {
-    	LocalDate nowDate = Util.getNowLocalDate();
-    	LocalDate fromDate = LocalDate.of(nowDate.getYear(), nowDate.getMonth(), 1);
-    	LocalDate toDate = fromDate.plusMonths(1).minusDays(1);
-    	recordListService.setRecordDtos(model, userDetails, fromDate, toDate);
-    	
-        return "attendanceRecord";
+    @GetMapping("/attendanceRecordList")
+    public String attendanceRecordList(@AuthenticationPrincipal UserDetailsImpl userDetails, Model model) throws Exception {
+//    	LocalDate nowDate = Util.getNowLocalDate();
+//    	LocalDate fromDate = LocalDate.of(nowDate.getYear(), nowDate.getMonth(), 1);
+//    	LocalDate toDate = fromDate.plusMonths(1).minusDays(1);
+//    	attendanceRecordListService.setRecordDtos(model, userDetails, fromDate, toDate);
+//    	model.addAttribute("employeeName", userDetails.getEmployeeName());
+
+    	return "attendanceRecordList";
+    }
+
+    @GetMapping("/attendanceRecordListSearch")
+    @ResponseBody
+    public void attendanceRecordListSearch(@Validated  AttendanceRecordListHeaderDto headerDto) throws NumberFormatException {
+    	int a = 0;
+    }
+
+    @PostMapping("/getResourceMessage")
+    @ResponseBody
+    public String note(@RequestParam String note) {
+        return note + note;
     }
 }

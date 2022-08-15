@@ -1,0 +1,17 @@
+.conditionDiv.left {
+	width: 100px;
+	display: inline-block;
+}
+
+.conditionRow {
+   display: flex;
+   flex-wrap: wrap;
+   margin: 0 15px 15px 15px;
+}
+
+.conditionCol {
+   margin: 10px 15px 10px 0;
+}
+.fiscalYearInput {
+	width: 4em;
+}

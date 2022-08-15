@@ -5,7 +5,9 @@ import java.time.LocalDateTime;
 
 public class DataUtil {
 
-    public static LocalDateTime toLocalDateTime(LocalDate date) {
+	private DataUtil(){}
+
+	public static LocalDateTime toLocalDateTime(LocalDate date) {
     	if (date.atStartOfDay() != null) {
     		return date.atStartOfDay();
     	}

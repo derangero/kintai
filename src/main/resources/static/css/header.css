@@ -1,0 +1,16 @@
+.headerDiv {
+	display: flex;
+	margin: 15px;
+}
+
+.headerDiv .left {
+	font-size: 24px;
+	font-weight: bold;
+	display: inline-block;
+	margin-right: auto;
+}
+
+.headerDiv .right {
+	display: inline-block;
+	padding: 5px 0 0 0;
+}

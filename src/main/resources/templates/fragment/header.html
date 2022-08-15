@@ -1,0 +1,19 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+</head>
+<body>
+	<th:block th:fragment="header(titleKey, value)">
+		<div class="headerDiv">
+			<span th:text="#{${titleKey}}" class="left"></span>
+			<span th:text="#{login.login.colon} + ${value}" class="right"></span>
+		</div>
+	</th:block>
+	<div th:fragment="conditionDiv(messageKey, value)">
+		<span th:text="#{${messageKey}}" style="display:inline-block; width: 100px"></span>
+		<span class="right">:</span>
+		<span th:text="${value}"></span>
+	</div>
+</body>
+</html>
